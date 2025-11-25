@@ -18,6 +18,7 @@ with sync_playwright() as playwright:
     # expect(page.get_by_role("row", name="ID Ref No. Broker Status")).to_be_visible()
     expect(page.locator("awr-table.ng-star-inserted")).to_be_visible()
 
+    # try - page.locator('awr-button.awr-equal[style="color: rgb(128, 0, 0);"]').click()
     page.locator("awr-button:nth-child(10)").click()
 
     page.pause()
