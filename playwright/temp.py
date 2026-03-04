@@ -1,0 +1,8 @@
+    # page.locator("#awr-control-92").click()
+    page.locator("#awr-control-92").fill("3")
+    # page.locator("#awr-control-93").click()
+    page.locator("#awr-control-93").fill("5")
+    # page.locator("#awr-control-94").click()
+    page.locator("#awr-control-94").fill("4")
+    # page.locator("#awr-control-95").click()
+    page.locator("#awr-control-95").fill("9")
