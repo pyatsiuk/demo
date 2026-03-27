@@ -56,20 +56,80 @@ with sync_playwright() as p:
     page.wait_for_timeout(1000)
     page.get_by_text("NGS").first.click()
 
-    # page.pause()
 
-    
 
-    # page.locator("autocomplete-airports")
-    # page.get_by_text("Reparse TextCreate Enquiry").click()
+    # Натискаємо New Option
+    page.locator("awr-button").filter(has_text="New Option").click()
+    page.wait_for_timeout(1500)
+
+    # Option 2 — це другий div.route-option на сторінці
+    option2 = page.locator("div.route-option").nth(1)
+    page.wait_for_timeout(1500)
+
+    def fill_date_time(datepicker, date_str, hours, minutes):
+        date_input = datepicker.locator("input.awr-control-date")
+        time_input = datepicker.locator("input.awr-control-time")
+        
+        date_input.click()
+        date_input.press("Control+a")
+        date_input.press_sequentially(date_str, delay=50)
+        date_input.press("Tab")
+        
+        page.wait_for_timeout(500)  # збільшили з 800 до 1500
+        
+        time_input.click()
+        page.wait_for_timeout(100)   # додали паузу після кліку
+        time_input.press("ArrowLeft")
+        page.wait_for_timeout(100)
+        time_input.press("ArrowLeft")
+        page.wait_for_timeout(100)
+        time_input.press_sequentially(hours, delay=300)    # збільшили з 150 до 300
+        page.wait_for_timeout(300)
+        time_input.press_sequentially(minutes, delay=300)  # збільшили з 150 до 300
+        page.wait_for_timeout(300)
+        time_input.press("Tab")
+        page.wait_for_timeout(500)
+
+    fill_date_time(option2.locator("awr-datepicker").nth(0), "27/04/2026", "22", "05")
+    fill_date_time(option2.locator("awr-datepicker").nth(1), "28/04/2026", "01", "10")
+    fill_date_time(option2.locator("awr-datepicker").nth(2), "28/04/2026", "05", "05")
+    fill_date_time(option2.locator("awr-datepicker").nth(3), "28/04/2026", "09", "20")
+
     page.locator("awr-button").filter(has_text="Create Enquiry").click()
-    page.wait_for_timeout(3500)   
+    page.wait_for_timeout(5500)   
 
     print("Enquiry has been created!")
+
+    expect(page.locator("awr-button").filter(has_text="All Companies")).to_be_visible()
+
+    page.locator(".fa-route").click()
+    expect(page.get_by_role("row", name="MIA, KMIA, Miami")).to_be_visible()
+
+    # Перший рядок — Flight No
+    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).fill("AP2801")
+    # Другий рядок — Flight No
+    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).fill("AP2801")
     
+    page.wait_for_timeout(100)
+    
+    page.locator("#cdk-drop-list-5").get_by_text("2. ").click()
 
-    # page.get_by_role("textbox", name="To", exact=True).fill("LAX, KLAX, Los Angeles International, Los Angeles, United States of America")
-    # page.get_by_role("textbox", name="Contact Name").click()
-    # page.get_by_role("textbox", name="Contact Name").fill("Tom")
+    # Перший рядок — Flight No
+    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).fill("AP2802")
+    # Другий рядок — Flight No
+    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).fill("AP2802")
+    
+    page.wait_for_timeout(100)
+    page.locator("awr-button").filter(has_text="Update").click()
+    page.wait_for_timeout(3000)
+    page.locator(".fa-sharp-duotone.fa-solid.fa-tag").click()
+    
+    page.pause()
 
+    # page.wait_for_timeout(3000)
     browser.close()
+    
