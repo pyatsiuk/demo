@@ -19,3 +19,5 @@ with sync_playwright() as p:
     print("✅ Auth state saved")
 
     browser.close()
+
+    
