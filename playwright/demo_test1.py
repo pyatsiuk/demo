@@ -93,7 +93,7 @@ with sync_playwright() as p:
     fill_date_time(option2.locator("awr-datepicker").nth(0), "27/04/2026", "22", "05")
     fill_date_time(option2.locator("awr-datepicker").nth(1), "28/04/2026", "01", "10")
     fill_date_time(option2.locator("awr-datepicker").nth(2), "28/04/2026", "05", "05")
-    fill_date_time(option2.locator("awr-datepicker").nth(3), "28/04/2026", "09", "20")
+    fill_date_time(option2.locator("awr-datepicker").nth(3), "29/04/2026", "09", "20")
 
     page.locator("awr-button").filter(has_text="Create Enquiry").click()
     page.wait_for_timeout(5500)   
@@ -132,4 +132,3 @@ with sync_playwright() as p:
 
     # page.wait_for_timeout(3000)
     browser.close()
-    

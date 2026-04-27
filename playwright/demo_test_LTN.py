@@ -34,14 +34,14 @@ with sync_playwright() as p:
     page.locator("autocomplete-airports > .ng-untouched > .awr-control > .awr-control-actions > .awr-open-icon").first.click()
    
     # Input the first airport From
-    page.get_by_role("textbox", name="From", exact=True).fill("MIA")
+    page.get_by_role("textbox", name="From", exact=True).fill("LTN")
     page.wait_for_timeout(1000)
-    page.get_by_text("MIA").first.click()
+    page.get_by_text("LTN").first.click()
     
      # Input the first airport To
-    page.get_by_role("textbox", name="To", exact=True).fill("LAX")
+    page.get_by_role("textbox", name="To", exact=True).fill("MAD")
     page.wait_for_timeout(1000)
-    page.get_by_text("LAX").first.click()
+    page.get_by_text("MAD").first.click()
 
     # Add new sector
     page.locator(".route-modification-buttons > awr-button:nth-child(2)").click()
@@ -50,19 +50,32 @@ with sync_playwright() as p:
     # I take last (second) row of routing and field its 'To' field
     # Use nth(-1) or last() — always last row
     
-    page.locator("autocomplete-airports").last.locator(".awr-open-icon").click()
+    # page.locator("autocomplete-airports").last.locator(".awr-open-icon").click()
+    # page.wait_for_timeout(1000)
+
+    page.locator("autocomplete-airports").last.locator("input").fill("BER")
+    page.wait_for_timeout(1000)
+    page.get_by_text("BER").first.click()
+
+    # Add new sector
+    page.locator(".route-modification-buttons > awr-button:nth-child(2)").click()
     page.wait_for_timeout(1000)
 
-    page.locator("autocomplete-airports").last.locator("input").fill("NGS")
+    # I take last (second) row of routing and field its 'To' field
+    # Use nth(-1) or last() — always last row
+    
+    # page.locator("autocomplete-airports").last.locator(".awr-open-icon").click()
+    # page.wait_for_timeout(1000)
+
+    page.locator("autocomplete-airports").last.locator("input").fill("LTN")
     page.wait_for_timeout(1000)
-    page.get_by_text("NGS").first.click()
+    page.get_by_text("LTN").first.click()
 
 
 
-    # Натискаємо New Option
+    # Натискаю New Option
     page.locator("awr-button").filter(has_text="New Option").click()
     page.wait_for_timeout(1500)
-
     # Option 2 — це другий div.route-option на сторінці
     option2 = page.locator("div.route-option").nth(1)
     page.wait_for_timeout(1500)
@@ -91,49 +104,64 @@ with sync_playwright() as p:
         time_input.press("Tab")
         page.wait_for_timeout(500)
 
-    fill_date_time(option2.locator("awr-datepicker").nth(0), "27/04/2026", "22", "05")
-    fill_date_time(option2.locator("awr-datepicker").nth(1), "28/04/2026", "01", "15")
-    fill_date_time(option2.locator("awr-datepicker").nth(2), "28/04/2026", "05", "05")
-    fill_date_time(option2.locator("awr-datepicker").nth(3), "29/04/2026", "09", "50")
+    fill_date_time(option2.locator("awr-datepicker").nth(0), "27/05/2026", "23", "05")
+    fill_date_time(option2.locator("awr-datepicker").nth(1), "28/05/2026", "02", "35")
+    fill_date_time(option2.locator("awr-datepicker").nth(2), "28/05/2026", "05", "10")
+    
+    fill_date_time(option2.locator("awr-datepicker").nth(3), "28/05/2026", "08", "30")
+    fill_date_time(option2.locator("awr-datepicker").nth(4), "28/05/2026", "23", "50")
+    fill_date_time(option2.locator("awr-datepicker").nth(5), "29/05/2026", "00", "45")
+    option2.locator("awr-datepicker").nth(2).click()
+    option2.locator("label").filter(has_text="Departure Block Date").nth(2).click()
+   
+
     # page.locator("label").filter(has_text="Requirements of LEG (Internal").nth(3).click()
 
     page.locator("awr-button").filter(has_text="Create Enquiry").click()
     page.wait_for_timeout(5500)   
 
     print("Enquiry has been created!")
-    page.pause()
 
-    
-    # expect(page.locator("awr-control-input").filter(has_text="All Companies")).to_be_visible()
+    expect(page.locator(".awr-tab-text").filter(has_text="1. LTN-MAD-BER-LTN")).to_be_visible()
 
     page.locator(".fa-route").click()
-    expect(page.get_by_role("row", name="MIA, KMIA, Miami")).to_be_visible()
+    expect(page.get_by_role("row", name="LTN, EGGW,").first).to_be_visible()
 
     # Перший рядок — Flight No
-    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).click()
-    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).fill("AP2801")
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").first.locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").first.locator("input.awr-control-input").nth(2).fill("MA2801")
     # Другий рядок — Flight No
-    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).click()
-    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).fill("AP2801")
+    page.get_by_role("row", name="BER, EDDB, Berlin/Brandenburg Intl, Berlin, Germany").first.locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="BER, EDDB, Berlin/Brandenburg Intl, Berlin, Germany").first.locator("input.awr-control-input").nth(2).fill("MA2801")
+    # Третій рядок — Flight No
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").nth(1).locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").nth(1).locator("input.awr-control-input").nth(2).fill("MA2801")
     
     page.wait_for_timeout(100)
     
     page.locator("#cdk-drop-list-5").get_by_text("2. ").click()
 
+    expect(page.locator(".awr-tab-text").filter(has_text="2. ")).to_be_visible()
+    expect(page.get_by_role("row", name="LTN, EGGW,").first).to_be_visible()
+
     # Перший рядок — Flight No
-    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).click()
-    page.get_by_role("row", name="MIA, KMIA, Mi").locator("input.awr-control-input").nth(2).fill("AP2802")
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").first.locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").first.locator("input.awr-control-input").nth(2).fill("MA2802")
     # Другий рядок — Flight No
-    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).click()
-    page.get_by_role("row", name="NGS, RJFU, N").locator("input.awr-control-input").nth(2).fill("AP2802")
+    page.get_by_role("row", name="BER, EDDB, Berlin/Brandenburg Intl, Berlin, Germany").first.locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="BER, EDDB, Berlin/Brandenburg Intl, Berlin, Germany").first.locator("input.awr-control-input").nth(2).fill("MA2802")
+    # Третій рядок — Flight No
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").nth(1).locator("input.awr-control-input").nth(2).click()
+    page.get_by_role("row", name="LTN, EGGW, London Luton, London, United Kingdom").nth(1).locator("input.awr-control-input").nth(2).fill("MA2802")
     
     page.wait_for_timeout(100)
+    
     page.locator("awr-button").filter(has_text="Update").click()
     page.wait_for_timeout(3000)
     page.locator(".fa-sharp-duotone.fa-solid.fa-tag").click()
     
-    # page.pause()
+    page.pause()
 
-    # page.wait_for_timeout(3000)
+    # # page.wait_for_timeout(3000)
     browser.close()
     
