@@ -43,5 +43,4 @@ def run(playwright):
 
 with sync_playwright() as playwright:
     run(playwright)
-
-    
+  
